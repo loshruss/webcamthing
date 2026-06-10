@@ -124,6 +124,9 @@ webcamthing: CMakeFiles/webcamthing.dir/src/main.cpp.o
 webcamthing: CMakeFiles/webcamthing.dir/src/app.cpp.o
 webcamthing: CMakeFiles/webcamthing.dir/src/media/player.cpp.o
 webcamthing: CMakeFiles/webcamthing.dir/build.make
+webcamthing: /usr/lib/x86_64-linux-gnu/libavformat.so
+webcamthing: /usr/lib/x86_64-linux-gnu/libavcodec.so
+webcamthing: /usr/lib/x86_64-linux-gnu/libavutil.so
 webcamthing: CMakeFiles/webcamthing.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable webcamthing"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/webcamthing.dir/link.txt --verbose=$(VERBOSE)
