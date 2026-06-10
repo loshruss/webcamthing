@@ -1,11 +1,17 @@
 #include "media/player.hpp"
+#include "media/video_renderer.hpp"
 
 #include <iostream>
+#include <vector>
+#include <SDL2/SDL.h>
 
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
+#include <libavutil/imgutils.h>
+#include <libavutil/pixfmt.h>
+#include <libswscale/swscale.h>
 }
 
 Player::Player() = default;
@@ -210,6 +216,138 @@ bool Player::decodeSomeVideoFrames(int maxFrames) {
 
     std::cout << "Decoded " << decodedFrames << " video frames successfully.\n";
 
+    av_frame_free(&frame);
+    av_packet_free(&packet);
+
+    return decodedFrames > 0;
+}
+
+bool Player::previewVideo(int maxFrames) {
+    if (!formatContext_ || !videoCodecContext_ || videoStreamIndex_ < 0) {
+        std::cerr << "Player is not ready to preview video.\n";
+        return false;
+    }
+
+    VideoRenderer renderer;
+
+    if (!renderer.open(videoCodecContext_->width, videoCodecContext_->height)) {
+        return false;
+    }
+
+    AVPacket* packet = av_packet_alloc();
+    AVFrame* frame = av_frame_alloc();
+
+    if (!packet || !frame) {
+        std::cerr << "Could not allocate FFmpeg packet/frame.\n";
+        if (packet) av_packet_free(&packet);
+        if (frame) av_frame_free(&frame);
+        return false;
+    }
+
+    SwsContext* swsContext = sws_getContext(
+        videoCodecContext_->width,
+        videoCodecContext_->height,
+        videoCodecContext_->pix_fmt,
+        videoCodecContext_->width,
+        videoCodecContext_->height,
+        AV_PIX_FMT_RGBA,
+        SWS_BILINEAR,
+        nullptr,
+        nullptr,
+        nullptr
+    );
+
+    if (!swsContext) {
+        std::cerr << "Could not create swscale context.\n";
+        av_frame_free(&frame);
+        av_packet_free(&packet);
+        return false;
+    }
+
+    const int width = videoCodecContext_->width;
+    const int height = videoCodecContext_->height;
+    const int rgbaPitch = width * 4;
+
+    std::vector<uint8_t> rgbaBuffer(rgbaPitch * height);
+
+    uint8_t* destData[4] = {
+        rgbaBuffer.data(),
+        nullptr,
+        nullptr,
+        nullptr
+    };
+
+    int destLinesize[4] = {
+        rgbaPitch,
+        0,
+        0,
+        0
+    };
+
+    int decodedFrames = 0;
+
+    while (av_read_frame(formatContext_, packet) >= 0 && decodedFrames < maxFrames) {
+        if (packet->stream_index == videoStreamIndex_) {
+            int result = avcodec_send_packet(videoCodecContext_, packet);
+
+            if (result < 0) {
+                std::cerr << "Failed to send packet to decoder.\n";
+                av_packet_unref(packet);
+                break;
+            }
+
+            while (result >= 0) {
+                result = avcodec_receive_frame(videoCodecContext_, frame);
+
+                if (result == AVERROR(EAGAIN) || result == AVERROR_EOF) {
+                    break;
+                }
+
+                if (result < 0) {
+                    std::cerr << "Failed to receive frame from decoder.\n";
+                    av_packet_unref(packet);
+                    sws_freeContext(swsContext);
+                    av_frame_free(&frame);
+                    av_packet_free(&packet);
+                    return false;
+                }
+
+                sws_scale(
+                    swsContext,
+                    frame->data,
+                    frame->linesize,
+                    0,
+                    height,
+                    destData,
+                    destLinesize
+                );
+
+                if (!renderer.renderFrame(rgbaBuffer.data(), rgbaPitch)) {
+                    break;
+                }
+
+                ++decodedFrames;
+
+                SDL_Delay(33);
+
+                av_frame_unref(frame);
+
+                if (renderer.shouldClose() || decodedFrames >= maxFrames) {
+                    break;
+                }
+            }
+        }
+
+        av_packet_unref(packet);
+
+        if (renderer.shouldClose()) {
+            break;
+        }
+    }
+
+    std::cout << "Previewed " << decodedFrames << " video frames.\n";
+
+    sws_freeContext(swsContext);
     av_frame_free(&frame);
     av_packet_free(&packet);
 

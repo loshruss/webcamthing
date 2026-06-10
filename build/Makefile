@@ -201,6 +201,30 @@ src/media/player.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webcamthing.dir/build.make CMakeFiles/webcamthing.dir/src/media/player.cpp.s
 .PHONY : src/media/player.cpp.s
 
+src/media/video_renderer.o: src/media/video_renderer.cpp.o
+.PHONY : src/media/video_renderer.o
+
+# target to build an object file
+src/media/video_renderer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webcamthing.dir/build.make CMakeFiles/webcamthing.dir/src/media/video_renderer.cpp.o
+.PHONY : src/media/video_renderer.cpp.o
+
+src/media/video_renderer.i: src/media/video_renderer.cpp.i
+.PHONY : src/media/video_renderer.i
+
+# target to preprocess a source file
+src/media/video_renderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webcamthing.dir/build.make CMakeFiles/webcamthing.dir/src/media/video_renderer.cpp.i
+.PHONY : src/media/video_renderer.cpp.i
+
+src/media/video_renderer.s: src/media/video_renderer.cpp.s
+.PHONY : src/media/video_renderer.s
+
+# target to generate assembly for a file
+src/media/video_renderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webcamthing.dir/build.make CMakeFiles/webcamthing.dir/src/media/video_renderer.cpp.s
+.PHONY : src/media/video_renderer.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -219,6 +243,9 @@ help:
 	@echo "... src/media/player.o"
 	@echo "... src/media/player.i"
 	@echo "... src/media/player.s"
+	@echo "... src/media/video_renderer.o"
+	@echo "... src/media/video_renderer.i"
+	@echo "... src/media/video_renderer.s"
 .PHONY : help
 
 

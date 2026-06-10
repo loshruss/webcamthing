@@ -16,6 +16,7 @@ public:
     bool open(const std::string& path);
     void printInfo() const;
     bool decodeSomeVideoFrames(int maxFrames);
+    bool previewVideo(int maxFrames);
 
 private:
     std::string filePath_;

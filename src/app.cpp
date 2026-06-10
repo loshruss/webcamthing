@@ -22,8 +22,8 @@ int App::run(int argc, char** argv) {
 
     player.printInfo();
 
-    if (!player.decodeSomeVideoFrames(100)) {
-        std::cerr << "Failed while decoding video frames.\n";
+    if (!player.previewVideo(300)) {
+        std::cerr << "Failed while previewing video.\n";
         return 1;
     }
 

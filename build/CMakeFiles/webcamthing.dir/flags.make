@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I"/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/src"
+CXX_INCLUDES = -I"/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/src" -isystem /usr/include/SDL2
 
-CXX_FLAGS = -std=gnu++20
+CXX_FLAGS = -std=gnu++20 -D_REENTRANT
 
