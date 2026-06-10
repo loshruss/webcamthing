@@ -376,7 +376,7 @@ bool Player::previewVideo(int maxFrames) {
 
                 ++decodedFrames;
 
-                SDL_Delay(33);
+                SDL_Delay(videoFrameDelayMs());
 
                 av_frame_unref(frame);
 
@@ -402,7 +402,7 @@ bool Player::previewVideo(int maxFrames) {
     return decodedFrames > 0;
 }
 
-bool Player::previewVideoWithAudio(int maxVideoFrames) {
+bool Player::previewVideoWithAudio(int maxVideoFrames, int audioDeviceIndex) {
     if (!formatContext_ || !videoCodecContext_ || videoStreamIndex_ < 0) {
         std::cerr << "Player is not ready to preview video.\n";
         return false;
@@ -454,9 +454,10 @@ bool Player::previewVideoWithAudio(int maxVideoFrames) {
         }
 
         if (!audioOutput.open(
-                audioCodecContext_->sample_rate,
-                outputChannelLayout.nb_channels
-            )) {
+            audioCodecContext_->sample_rate,
+            outputChannelLayout.nb_channels,
+            audioDeviceIndex
+        )) {
             swr_free(&swrContext);
             return false;
         }
@@ -617,6 +618,17 @@ bool Player::previewVideoWithAudio(int maxVideoFrames) {
                             1
                         );
 
+                        const int maxQueuedAudioBytes = audioOutput.bytesPerSecond();
+
+                        while (
+                            maxQueuedAudioBytes > 0 &&
+                            audioOutput.queuedBytes() > maxQueuedAudioBytes &&
+                            !renderer.shouldClose()
+                        ) {
+                            renderer.renderFrame(rgbaBuffer.data(), rgbaPitch);
+                            SDL_Delay(10);
+                        }
+
                         audioOutput.queueAudio(audioBuffer.data(), convertedBufferSize);
                         ++decodedAudioFrames;
                     }
@@ -641,6 +653,8 @@ bool Player::previewVideoWithAudio(int maxVideoFrames) {
     std::cout << "Previewed " << decodedVideoFrames << " video frames.\n";
     std::cout << "Decoded " << decodedAudioFrames << " audio frames.\n";
 
+    std::cout << "Video frame delay: " << videoFrameDelayMs() << " ms\n";
+
     sws_freeContext(swsContext);
 
     if (swrContext) {
@@ -651,4 +665,28 @@ bool Player::previewVideoWithAudio(int maxVideoFrames) {
     av_packet_free(&packet);
 
     return decodedVideoFrames > 0;
+}
+
+int Player::videoFrameDelayMs() const {
+    if (!formatContext_ || videoStreamIndex_ < 0) {
+        return 33;
+    }
+
+    const AVStream* stream = formatContext_->streams[videoStreamIndex_];
+
+    double fps = 0.0;
+
+    if (stream->avg_frame_rate.den != 0) {
+        fps = av_q2d(stream->avg_frame_rate);
+    }
+
+    if (fps <= 0.0 && stream->r_frame_rate.den != 0) {
+        fps = av_q2d(stream->r_frame_rate);
+    }
+
+    if (fps <= 0.0) {
+        return 33;
+    }
+
+    return static_cast<int>(1000.0 / fps);
 }

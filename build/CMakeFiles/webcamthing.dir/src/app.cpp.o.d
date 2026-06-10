@@ -156,4 +156,9 @@ CMakeFiles/webcamthing.dir/src/app.cpp.o: \
  /usr/include/c++/13/bits/basic_ios.tcc \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
  /usr/include/c++/13/bits/istream.tcc \
- /mnt/c/Users/logan/Documents/LE\ PROJECTS/webcamthing/webcamthing/src/media/player.hpp
+ /mnt/c/Users/logan/Documents/LE\ PROJECTS/webcamthing/webcamthing/src/media/player.hpp \
+ /mnt/c/Users/logan/Documents/LE\ PROJECTS/webcamthing/webcamthing/src/media/audio_output.hpp \
+ /usr/include/c++/13/cstdint \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-least.h

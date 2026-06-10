@@ -17,7 +17,49 @@ AudioOutput::~AudioOutput() {
     SDL_QuitSubSystem(SDL_INIT_AUDIO);
 }
 
-bool AudioOutput::open(int sampleRate, int channels) {
+void AudioOutput::listDevices() {
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) {
+        std::cerr << "SDL audio init failed: " << SDL_GetError() << "\n";
+        return;
+    }
+
+    int count = SDL_GetNumAudioDevices(0);
+
+    if (count < 0) {
+        std::cerr << "SDL_GetNumAudioDevices failed: " << SDL_GetError() << "\n";
+        SDL_QuitSubSystem(SDL_INIT_AUDIO);
+        return;
+    }
+
+    std::cout << "Audio output devices:\n";
+
+    for (int i = 0; i < count; ++i) {
+        const char* name = SDL_GetAudioDeviceName(i, 0);
+        std::cout << "  [" << i << "] " << (name ? name : "Unknown") << "\n";
+    }
+
+    SDL_QuitSubSystem(SDL_INIT_AUDIO);
+}
+
+bool AudioOutput::open(int sampleRate, int channels, int deviceIndex) {
+    const char* deviceName = nullptr;
+
+    if (deviceIndex >= 0) {
+        int count = SDL_GetNumAudioDevices(0);
+
+        if (deviceIndex >= count) {
+            std::cerr << "Invalid audio device index: " << deviceIndex << "\n";
+            return false;
+        }
+
+        deviceName = SDL_GetAudioDeviceName(deviceIndex, 0);
+
+        if (!deviceName) {
+            std::cerr << "Could not get audio device name.\n";
+            return false;
+        }
+    }
+
     SDL_AudioSpec desired{};
     desired.freq = sampleRate;
     desired.format = AUDIO_S16SYS;
@@ -28,7 +70,7 @@ bool AudioOutput::open(int sampleRate, int channels) {
     SDL_AudioSpec obtained{};
 
     deviceId_ = SDL_OpenAudioDevice(
-        nullptr,
+        deviceName,
         0,
         &desired,
         &obtained,
@@ -41,8 +83,13 @@ bool AudioOutput::open(int sampleRate, int channels) {
     }
 
     std::cout << "Opened audio output:\n";
+    std::cout << "  Device: " << (deviceName ? deviceName : "Default") << "\n";
     std::cout << "  Sample rate: " << obtained.freq << " Hz\n";
     std::cout << "  Channels: " << static_cast<int>(obtained.channels) << "\n";
+
+    sampleRate_ = obtained.freq;
+    channels_ = obtained.channels;
+    bytesPerSample_ = 2;
 
     SDL_PauseAudioDevice(deviceId_, 0);
 
@@ -63,4 +110,8 @@ int AudioOutput::queuedBytes() const {
     }
 
     return static_cast<int>(SDL_GetQueuedAudioSize(deviceId_));
+}
+
+int AudioOutput::bytesPerSecond() const {
+    return sampleRate_ * channels_ * bytesPerSample_;
 }
