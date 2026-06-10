@@ -690,3 +690,26 @@ int Player::videoFrameDelayMs() const {
 
     return static_cast<int>(1000.0 / fps);
 }
+
+bool Player::seekToStart() {
+    if (!formatContext_) {
+        return false;
+    }
+
+    int result = av_seek_frame(formatContext_, -1, 0, AVSEEK_FLAG_BACKWARD);
+
+    if (result < 0) {
+        std::cerr << "Failed to seek to start.\n";
+        return false;
+    }
+
+    if (videoCodecContext_) {
+        avcodec_flush_buffers(videoCodecContext_);
+    }
+
+    if (audioCodecContext_) {
+        avcodec_flush_buffers(audioCodecContext_);
+    }
+
+    return true;
+}

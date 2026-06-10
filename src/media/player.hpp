@@ -14,6 +14,7 @@ public:
     Player& operator=(const Player&) = delete;
 
     bool open(const std::string& path);
+    bool seekToStart();
     void printInfo() const;
 
     bool decodeSomeVideoFrames(int maxFrames);
