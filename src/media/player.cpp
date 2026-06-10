@@ -3,6 +3,7 @@
 #include <iostream>
 
 extern "C" {
+#include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
 }
@@ -10,6 +11,10 @@ extern "C" {
 Player::Player() = default;
 
 Player::~Player() {
+    if (videoCodecContext_) {
+        avcodec_free_context(&videoCodecContext_);
+    }
+
     if (formatContext_) {
         avformat_close_input(&formatContext_);
     }
@@ -31,6 +36,53 @@ bool Player::open(const std::string& path) {
     result = avformat_find_stream_info(formatContext_, nullptr);
     if (result < 0) {
         std::cerr << "FFmpeg failed to read stream info.\n";
+        return false;
+    }
+
+    result = av_find_best_stream(
+        formatContext_,
+        AVMEDIA_TYPE_VIDEO,
+        -1,
+        -1,
+        nullptr,
+        0
+    );
+
+    if (result < 0) {
+        std::cerr << "No video stream found.\n";
+        return false;
+    }
+
+    videoStreamIndex_ = result;
+
+    AVStream* videoStream = formatContext_->streams[videoStreamIndex_];
+    const AVCodecParameters* codecParams = videoStream->codecpar;
+
+    const AVCodec* codec = avcodec_find_decoder(codecParams->codec_id);
+    if (!codec) {
+        std::cerr << "Could not find decoder for video codec.\n";
+        return false;
+    }
+
+    videoCodecContext_ = avcodec_alloc_context3(codec);
+    if (!videoCodecContext_) {
+        std::cerr << "Could not allocate video codec context.\n";
+        return false;
+    }
+
+    result = avcodec_parameters_to_context(videoCodecContext_, codecParams);
+    if (result < 0) {
+        std::cerr << "Could not copy codec parameters to codec context.\n";
+        return false;
+    }
+
+    result = avcodec_open2(videoCodecContext_, codec, nullptr);
+    if (result < 0) {
+        char errorBuffer[AV_ERROR_MAX_STRING_SIZE]{};
+        av_strerror(result, errorBuffer, sizeof(errorBuffer));
+
+        std::cerr << "Could not open video decoder.\n";
+        std::cerr << "Error: " << errorBuffer << "\n";
         return false;
     }
 
@@ -73,4 +125,93 @@ void Player::printInfo() const {
             std::cout << "  Channels: " << params->ch_layout.nb_channels << "\n";
         }
     }
+}
+
+bool Player::decodeSomeVideoFrames(int maxFrames) {
+    if (!formatContext_ || !videoCodecContext_ || videoStreamIndex_ < 0) {
+        std::cerr << "Player is not ready to decode video.\n";
+        return false;
+    }
+
+    AVPacket* packet = av_packet_alloc();
+    AVFrame* frame = av_frame_alloc();
+
+    if (!packet || !frame) {
+        std::cerr << "Could not allocate FFmpeg packet/frame.\n";
+
+        if (packet) {
+            av_packet_free(&packet);
+        }
+
+        if (frame) {
+            av_frame_free(&frame);
+        }
+
+        return false;
+    }
+
+    int decodedFrames = 0;
+
+    while (av_read_frame(formatContext_, packet) >= 0 && decodedFrames < maxFrames) {
+        if (packet->stream_index == videoStreamIndex_) {
+            int result = avcodec_send_packet(videoCodecContext_, packet);
+
+            if (result < 0) {
+                char errorBuffer[AV_ERROR_MAX_STRING_SIZE]{};
+                av_strerror(result, errorBuffer, sizeof(errorBuffer));
+
+                std::cerr << "Failed to send packet to decoder.\n";
+                std::cerr << "Error: " << errorBuffer << "\n";
+
+                av_packet_unref(packet);
+                av_frame_free(&frame);
+                av_packet_free(&packet);
+                return false;
+            }
+
+            while (result >= 0) {
+                result = avcodec_receive_frame(videoCodecContext_, frame);
+
+                if (result == AVERROR(EAGAIN) || result == AVERROR_EOF) {
+                    break;
+                }
+
+                if (result < 0) {
+                    char errorBuffer[AV_ERROR_MAX_STRING_SIZE]{};
+                    av_strerror(result, errorBuffer, sizeof(errorBuffer));
+
+                    std::cerr << "Failed to receive frame from decoder.\n";
+                    std::cerr << "Error: " << errorBuffer << "\n";
+
+                    av_packet_unref(packet);
+                    av_frame_free(&frame);
+                    av_packet_free(&packet);
+                    return false;
+                }
+
+                ++decodedFrames;
+
+                std::cout << "Decoded video frame " << decodedFrames
+                          << " | "
+                          << frame->width << "x" << frame->height
+                          << " | format " << frame->format
+                          << "\n";
+
+                av_frame_unref(frame);
+
+                if (decodedFrames >= maxFrames) {
+                    break;
+                }
+            }
+        }
+
+        av_packet_unref(packet);
+    }
+
+    std::cout << "Decoded " << decodedFrames << " video frames successfully.\n";
+
+    av_frame_free(&frame);
+    av_packet_free(&packet);
+
+    return decodedFrames > 0;
 }

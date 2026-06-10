@@ -3,6 +3,7 @@
 #include <string>
 
 struct AVFormatContext;
+struct AVCodecContext;
 
 class Player {
 public:
@@ -14,8 +15,13 @@ public:
 
     bool open(const std::string& path);
     void printInfo() const;
+    bool decodeSomeVideoFrames(int maxFrames);
 
 private:
     std::string filePath_;
+
     AVFormatContext* formatContext_ = nullptr;
+    AVCodecContext* videoCodecContext_ = nullptr;
+
+    int videoStreamIndex_ = -1;
 };

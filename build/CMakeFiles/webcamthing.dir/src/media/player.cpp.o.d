@@ -158,11 +158,12 @@ CMakeFiles/webcamthing.dir/src/media/player.cpp.o: \
  /usr/include/c++/13/bits/basic_ios.tcc \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
  /usr/include/c++/13/bits/istream.tcc \
- /usr/include/x86_64-linux-gnu/libavformat/avformat.h \
- /usr/include/x86_64-linux-gnu/libavcodec/codec_par.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/avcodec.h \
+ /usr/include/x86_64-linux-gnu/libavutil/samplefmt.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
+ /usr/include/x86_64-linux-gnu/libavutil/attributes.h \
  /usr/include/x86_64-linux-gnu/libavutil/avutil.h \
  /usr/include/x86_64-linux-gnu/libavutil/common.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/limits.h \
@@ -208,33 +209,37 @@ CMakeFiles/webcamthing.dir/src/media/player.cpp.o: \
  /usr/include/x86_64-linux-gnu/libavutil/intfloat.h \
  /usr/include/x86_64-linux-gnu/libavutil/log.h \
  /usr/include/x86_64-linux-gnu/libavutil/pixfmt.h \
- /usr/include/x86_64-linux-gnu/libavutil/channel_layout.h \
- /usr/include/x86_64-linux-gnu/libavutil/rational.h \
- /usr/include/x86_64-linux-gnu/libavutil/pixfmt.h \
- /usr/include/x86_64-linux-gnu/libavcodec/codec_id.h \
- /usr/include/x86_64-linux-gnu/libavutil/samplefmt.h \
- /usr/include/x86_64-linux-gnu/libavcodec/version_major.h \
- /usr/include/x86_64-linux-gnu/libavcodec/defs.h \
- /usr/include/x86_64-linux-gnu/libavcodec/packet.h \
- /usr/include/x86_64-linux-gnu/libavutil/attributes.h \
  /usr/include/x86_64-linux-gnu/libavutil/buffer.h \
+ /usr/include/x86_64-linux-gnu/libavutil/channel_layout.h \
  /usr/include/x86_64-linux-gnu/libavutil/dict.h \
- /usr/include/x86_64-linux-gnu/libavutil/version.h \
- /usr/include/x86_64-linux-gnu/libavcodec/version_major.h \
- /usr/include/x86_64-linux-gnu/libavcodec/defs.h \
- /usr/include/x86_64-linux-gnu/libavcodec/packet.h \
- /usr/include/x86_64-linux-gnu/libavutil/log.h \
- /usr/include/x86_64-linux-gnu/libavformat/avio.h \
- /usr/include/x86_64-linux-gnu/libavformat/version_major.h \
- /usr/include/x86_64-linux-gnu/libavformat/version.h \
- /usr/include/x86_64-linux-gnu/libavformat/version_major.h \
  /usr/include/x86_64-linux-gnu/libavutil/frame.h \
  /usr/include/x86_64-linux-gnu/libavutil/avutil.h \
  /usr/include/x86_64-linux-gnu/libavutil/buffer.h \
  /usr/include/x86_64-linux-gnu/libavutil/channel_layout.h \
  /usr/include/x86_64-linux-gnu/libavutil/dict.h \
  /usr/include/x86_64-linux-gnu/libavutil/samplefmt.h \
+ /usr/include/x86_64-linux-gnu/libavutil/log.h \
+ /usr/include/x86_64-linux-gnu/libavutil/pixfmt.h \
+ /usr/include/x86_64-linux-gnu/libavutil/rational.h \
  /usr/include/x86_64-linux-gnu/libavcodec/codec.h \
  /usr/include/x86_64-linux-gnu/libavutil/hwcontext.h \
  /usr/include/x86_64-linux-gnu/libavutil/frame.h \
- /usr/include/x86_64-linux-gnu/libavcodec/codec_id.h
+ /usr/include/x86_64-linux-gnu/libavcodec/codec_id.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/version_major.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/version_major.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/codec_id.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/defs.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/packet.h \
+ /usr/include/x86_64-linux-gnu/libavutil/version.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/version.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/codec_desc.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/codec_par.h \
+ /usr/include/x86_64-linux-gnu/libavformat/avformat.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/codec_par.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/defs.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/packet.h \
+ /usr/include/x86_64-linux-gnu/libavformat/avio.h \
+ /usr/include/x86_64-linux-gnu/libavformat/version_major.h \
+ /usr/include/x86_64-linux-gnu/libavformat/version.h \
+ /usr/include/x86_64-linux-gnu/libavformat/version_major.h \
+ /usr/include/x86_64-linux-gnu/libavcodec/codec.h
