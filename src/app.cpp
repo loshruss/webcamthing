@@ -22,8 +22,8 @@ int App::run(int argc, char** argv) {
 
     player.printInfo();
 
-    if (!player.previewVideo(300)) {
-        std::cerr << "Failed while previewing video.\n";
+    if (!player.previewVideoWithAudio(300)) {
+        std::cerr << "Failed while previewing video with audio.\n";
         return 1;
     }
 

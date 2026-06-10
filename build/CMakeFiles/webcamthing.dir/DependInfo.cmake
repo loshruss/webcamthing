@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/src/app.cpp" "CMakeFiles/webcamthing.dir/src/app.cpp.o" "gcc" "CMakeFiles/webcamthing.dir/src/app.cpp.o.d"
   "/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/src/main.cpp" "CMakeFiles/webcamthing.dir/src/main.cpp.o" "gcc" "CMakeFiles/webcamthing.dir/src/main.cpp.o.d"
+  "/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/src/media/audio_output.cpp" "CMakeFiles/webcamthing.dir/src/media/audio_output.cpp.o" "gcc" "CMakeFiles/webcamthing.dir/src/media/audio_output.cpp.o.d"
   "/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/src/media/player.cpp" "CMakeFiles/webcamthing.dir/src/media/player.cpp.o" "gcc" "CMakeFiles/webcamthing.dir/src/media/player.cpp.o.d"
   "/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/src/media/video_renderer.cpp" "CMakeFiles/webcamthing.dir/src/media/video_renderer.cpp.o" "gcc" "CMakeFiles/webcamthing.dir/src/media/video_renderer.cpp.o.d"
   )

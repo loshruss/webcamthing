@@ -177,6 +177,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webcamthing.dir/build.make CMakeFiles/webcamthing.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/media/audio_output.o: src/media/audio_output.cpp.o
+.PHONY : src/media/audio_output.o
+
+# target to build an object file
+src/media/audio_output.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webcamthing.dir/build.make CMakeFiles/webcamthing.dir/src/media/audio_output.cpp.o
+.PHONY : src/media/audio_output.cpp.o
+
+src/media/audio_output.i: src/media/audio_output.cpp.i
+.PHONY : src/media/audio_output.i
+
+# target to preprocess a source file
+src/media/audio_output.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webcamthing.dir/build.make CMakeFiles/webcamthing.dir/src/media/audio_output.cpp.i
+.PHONY : src/media/audio_output.cpp.i
+
+src/media/audio_output.s: src/media/audio_output.cpp.s
+.PHONY : src/media/audio_output.s
+
+# target to generate assembly for a file
+src/media/audio_output.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webcamthing.dir/build.make CMakeFiles/webcamthing.dir/src/media/audio_output.cpp.s
+.PHONY : src/media/audio_output.cpp.s
+
 src/media/player.o: src/media/player.cpp.o
 .PHONY : src/media/player.o
 
@@ -240,6 +264,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/media/audio_output.o"
+	@echo "... src/media/audio_output.i"
+	@echo "... src/media/audio_output.s"
 	@echo "... src/media/player.o"
 	@echo "... src/media/player.i"
 	@echo "... src/media/player.s"

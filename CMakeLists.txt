@@ -12,6 +12,7 @@ pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET
     libavcodec
     libavutil
     libswscale
+    libswresample
 )
 
 pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
@@ -21,6 +22,7 @@ add_executable(webcamthing
     src/app.cpp
     src/media/player.cpp
     src/media/video_renderer.cpp
+    src/media/audio_output.cpp
 )
 
 target_include_directories(webcamthing PRIVATE src)
