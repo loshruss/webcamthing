@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/webcamthing.dir/src/main.cpp.o CMakeFiles/webcamthing.dir/src/app.cpp.o CMakeFiles/webcamthing.dir/src/media/player.cpp.o -o webcamthing 

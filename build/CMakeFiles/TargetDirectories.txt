@@ -1,0 +1,3 @@
+/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/build/CMakeFiles/webcamthing.dir
+/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/logan/Documents/LE PROJECTS/webcamthing/webcamthing/build/CMakeFiles/rebuild_cache.dir
